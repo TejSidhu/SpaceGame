@@ -19,7 +19,7 @@ public class bullets {
 		this.bulletY = defaultY;
 		
 		if(texture == null){
-			texture = new Texture("bullet.png");
+			texture = new Texture("bullet.png");//Hello world
 			
 		}
 	}

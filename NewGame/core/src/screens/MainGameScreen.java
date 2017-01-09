@@ -32,7 +32,7 @@ public class MainGameScreen implements Screen{
 	float bulletTimer;//Keeps track of bullet timer
 	float ROLL_TIMER;//Actual timer to keep track of the ROLL_SWITCH_TIMER
 	
-	ArrayList<bullets> bullet;
+	ArrayList<bullets> bullet;//Array for all the bullets created 
 	
 	
 	
