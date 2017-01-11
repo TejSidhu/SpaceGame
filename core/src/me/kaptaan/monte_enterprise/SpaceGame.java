@@ -11,7 +11,7 @@ public class SpaceGame extends Game {
 
 	
 	public static final int screen_width = 480;
-	public static final int screen_height = 720;
+	public final static int screen_height = 720;
 
 	public SpriteBatch batch;
 	

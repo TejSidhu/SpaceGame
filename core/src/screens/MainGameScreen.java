@@ -17,6 +17,7 @@ import entityy.Asteroid;
 import entityy.Boom;
 import entityy.bullets;
 import me.kaptaan.monte_enterprise.SpaceGame;
+import toolss.CollisionDetection;
 
 public class MainGameScreen implements Screen{
 	
@@ -55,11 +56,11 @@ public class MainGameScreen implements Screen{
 	Asteroid asteroid;
 	Boom boom;
 	SpaceGame spaceG;
-	
-	
+	Texture blank;
+	float health = 1; //1 = full health, 0 = Dead/No health
+	CollisionDetection playerDetect;
 
 
-	@SuppressWarnings("unchecked")
 	public MainGameScreen(SpaceGame spaceG){
 		this.spaceG = spaceG;
 		score = 0;
@@ -69,6 +70,7 @@ public class MainGameScreen implements Screen{
 		asteroids = new ArrayList<Asteroid>();
 		booms = new ArrayList<Boom>();
 		dice = new Random();
+		playerDetect = new CollisionDetection(0, 0, Ship_WIDTH, Ship_HEIGHT);
 		fontSCORE = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
 		Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
 		roll = 2;
@@ -76,13 +78,13 @@ public class MainGameScreen implements Screen{
 		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"),Ship_Pixel_WIDTH,Ship_Pixel_HEIGHT);
 		ROLL_TIMER = 0;
 		bulletTimer = 0;
-		rolls[0] = new Animation(ANIMATION_SPEED, rollSpriteSheet[2]);//All left
-		rolls[1] = new Animation(ANIMATION_SPEED, rollSpriteSheet[1]);
-		rolls[2] = new Animation(ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
-		rolls[3] = new Animation(ANIMATION_SPEED, rollSpriteSheet[3]);
-		rolls[4] = new Animation(ANIMATION_SPEED, rollSpriteSheet[4]);//Right
+		rolls[0] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[2]);//All left
+		rolls[1] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[1]);
+		rolls[2] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
+		rolls[3] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[3]);
+		rolls[4] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[4]);//Right
 		MainGameScreenBG = new Texture("spaceBG2.png");
-	
+		blank = new Texture("blank.png");
 	}
 	
 	@Override
@@ -138,7 +140,7 @@ public class MainGameScreen implements Screen{
 		 //Explosion updater
 		 ArrayList<Boom> boom_removal_service = new ArrayList<Boom>();
 		 for(Boom boom: booms){
-			 boom.update(delta);
+			 boom.update();
 			 if(booms.remove(boom_removal_service));
 			 boom_removal_service.add(boom);
 		 }
@@ -200,8 +202,8 @@ public class MainGameScreen implements Screen{
 				}
 			}
 			
-			if(x > spaceG.screen_width-Ship_WIDTH){
-				x = spaceG.screen_width-Ship_WIDTH;
+			if(x > SpaceGame.screen_width-Ship_WIDTH){
+				x = SpaceGame.screen_width-Ship_WIDTH;
 			}
 			
 			ROLL_TIMER += Gdx.graphics.getDeltaTime();
@@ -227,9 +229,15 @@ public class MainGameScreen implements Screen{
 					if(roll<0){
 						roll = 0;
 					}
-				}
+				}     //cheeky boy is hree too
 			}
 		}
+		//Updates collision after the player moves
+		playerDetect.move(x, y);
+		
+		
+		
+		
 		//Collision detection happens after all the objects have updated
 		for(bullets bullet: bullet){
 			for(Asteroid asteroid : asteroids){
@@ -242,14 +250,27 @@ public class MainGameScreen implements Screen{
 			}
 		}
 		
+		
+		
+		
+		for(Asteroid asteroid : asteroids){
+			if(asteroid.getCollisionDetection().collisionWITH(playerDetect)){
+				asteroid_removal_service.add(asteroid);
+				health -= 0.1;
+			}
+		}
+		
+		
 		bullet.removeAll(bullet_removal_service);
+		
 		asteroids.removeAll(asteroid_removal_service);
 		
 		stateTime += delta;
-		spaceG.batch.begin();
+		spaceG.batch.begin();    //get hacked kiddo
 		spaceG.batch.draw(MainGameScreenBG, 0, 0);
 		GlyphLayout  scoreLayout = new GlyphLayout(fontSCORE, "" + score); 
 		fontSCORE.draw(spaceG.batch, scoreLayout, (Gdx.graphics.getWidth()/2 - scoreLayout.width)+ 30,Gdx.graphics.getHeight() - scoreLayout.height );
+		
 		for(bullets bullet: bullet ){
 			bullet.render(spaceG.batch);
 		}
@@ -258,15 +279,17 @@ public class MainGameScreen implements Screen{
 		}
 		for(Boom boom: booms){
 			boom.render(spaceG.batch);
+			boom.render(spaceG.batch);
+			
 		}
-
+		spaceG.batch.draw(blank, 0, 0,Gdx.graphics.getWidth()* health, 5);
 		//spaceG.batch.draw(img, x, y);
 		spaceG.batch.draw((TextureRegion)rolls[roll].getKeyFrame(stateTime, true), x, y, Ship_WIDTH, Ship_HEIGHT);
 		
 		
 		spaceG.batch.end();
 		
-	}
+	}  //i am everywhere
 
 	@Override
 	public void resize(int width, int height) {
@@ -281,7 +304,7 @@ public class MainGameScreen implements Screen{
 	}
 
 	@Override
-	public void resume() {
+	public void resume() {   //your system is hacked
 		
 		
 	}
@@ -294,7 +317,7 @@ public class MainGameScreen implements Screen{
 
 	@Override
 	public void dispose() {
-		
+		//last one
 		
 	}
 
