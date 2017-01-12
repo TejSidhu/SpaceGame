@@ -6,6 +6,7 @@ import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -34,8 +35,6 @@ public class MainGameScreen implements Screen{
 	
 	public static final float MIN_SPAWN_TIME = 0.1f;
 	public static final float MAX_SPAWN_TIME = 0.4f;
-	
-	private Texture MainGameScreenBG;
 	//Float party
 	float x;
 	float y;
@@ -52,7 +51,8 @@ public class MainGameScreen implements Screen{
 	Random dice; 
 	BitmapFont fontSCORE; 
 	int score;
-	Animation[] rolls;
+	@SuppressWarnings("rawtypes")
+	Animation [] rolls;
 	Asteroid asteroid;
 	Boom boom;
 	SpaceGame spaceG;
@@ -83,8 +83,8 @@ public class MainGameScreen implements Screen{
 		rolls[2] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
 		rolls[3] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[3]);
 		rolls[4] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[4]);//Right
-		MainGameScreenBG = new Texture("spaceBG2.png");
 		blank = new Texture("blank.png");
+		spaceG.scroolBG.set_SpeedFixed(false);
 	}
 	
 	@Override
@@ -245,7 +245,7 @@ public class MainGameScreen implements Screen{
 					asteroid_removal_service.add(asteroid);
 					bullet_removal_service.add(bullet);
 					booms.add(new Boom(asteroid.getX(), asteroid.getY())) ;
-					score+= 10;
+					score+= 50;
 				}
 			}
 		}
@@ -257,6 +257,18 @@ public class MainGameScreen implements Screen{
 			if(asteroid.getCollisionDetection().collisionWITH(playerDetect)){
 				asteroid_removal_service.add(asteroid);
 				health -= 0.1;
+				//If the player has no health, go to game over screen
+				if(health<=0){
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.dispose();
+					spaceG.setScreen(new GameOverScreen(spaceG, score));
+					return;
+				}
 			}
 		}
 		
@@ -266,8 +278,12 @@ public class MainGameScreen implements Screen{
 		asteroids.removeAll(asteroid_removal_service);
 		
 		stateTime += delta;
-		spaceG.batch.begin();    //get hacked kiddo
-		spaceG.batch.draw(MainGameScreenBG, 0, 0);
+		
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		spaceG.batch.begin();  
+		//get hacked kiddo
+		spaceG.scroolBG.updateANDrender(Gdx.graphics.getDeltaTime(), spaceG.batch);
 		GlyphLayout  scoreLayout = new GlyphLayout(fontSCORE, "" + score); 
 		fontSCORE.draw(spaceG.batch, scoreLayout, (Gdx.graphics.getWidth()/2 - scoreLayout.width)+ 30,Gdx.graphics.getHeight() - scoreLayout.height );
 		
@@ -282,7 +298,16 @@ public class MainGameScreen implements Screen{
 			boom.render(spaceG.batch);
 			
 		}
+		//Render health bar
+		if(health> 0.7f){
+			spaceG.batch.setColor(Color.GREEN);
+		}else if(health >0.3f){
+			spaceG.batch.setColor(Color.ORANGE);
+		}else if(health > 0.0f){
+			spaceG.batch.setColor(Color.RED);
+		}		
 		spaceG.batch.draw(blank, 0, 0,Gdx.graphics.getWidth()* health, 5);
+		spaceG.batch.setColor(Color.WHITE);
 		//spaceG.batch.draw(img, x, y);
 		spaceG.batch.draw((TextureRegion)rolls[roll].getKeyFrame(stateTime, true), x, y, Ship_WIDTH, Ship_HEIGHT);
 		

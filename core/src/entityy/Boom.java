@@ -1,8 +1,6 @@
 package entityy;
-import com.badlogic.gdx.ApplicationAdapter;
 //am in the systej, cheeky little me
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -31,7 +29,6 @@ public class Boom {
 	
 	
 	
-	@SuppressWarnings("unchecked")
 	public Boom (float x, float y ){
 		this.x = x-ofset;
 		this.y = y - ofset;

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 
 import me.kaptaan.monte_enterprise.SpaceGame;
+import toolss.ScrollingBG;
 
 public class MainMenuScreen implements Screen {
 
@@ -31,6 +32,8 @@ public class MainMenuScreen implements Screen {
 		InactivePlayButton = new Texture("play_button_inactive.png");
 		ActiveExitButton = new Texture("exit_button_active.png");
 		InactiveExitButton = new Texture("exit_button_inactive.png");
+		spaceG.scroolBG.set_SpeedFixed(true);
+		spaceG.scroolBG.set_Speeed(ScrollingBG.DEFAULT_SPEED);
 	}
 	
 	@Override
@@ -46,13 +49,13 @@ public class MainMenuScreen implements Screen {
 		//System.out.println(Gdx.graphics.getDeltaTime());
 		spaceG.batch.begin();
 		
-		spaceG.batch.draw(spaceBG, 0, 0);
+		spaceG.scroolBG.updateANDrender(Gdx.graphics.getDeltaTime(), spaceG.batch);
 		
 		float x = SpaceGame.screen_width/2 - Play_Y/2;
 		//Play Button 
 		if(Gdx.input.getX() < x + Play_Button_Width && Gdx.input.getX() > x && SpaceGame.screen_height - Gdx.input.getY() < Play_Y + Play_Button_Height && SpaceGame.screen_height - Gdx.input.getY()> Play_Y ){
 			spaceG.batch.draw(ActivePlayButton, x,Play_Y, Play_Button_Width, Play_Button_Height);
-			if(Gdx.input.isTouched()){
+			if(Gdx.input.justTouched()){
 				spaceG.setScreen(new MainGameScreen(spaceG));
 				this.dispose();
 			}
