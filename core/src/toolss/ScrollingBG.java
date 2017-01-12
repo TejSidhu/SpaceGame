@@ -56,11 +56,9 @@ boolean isSpeedFixed;
 			y2 = y1 + backGround.getHeight() * imageScalability;
 		}
 		batch.draw(backGround, 0, y1, SpaceGame.screen_width, backGround.getHeight() * imageScalability);
-		batch.draw(backGround, 0, y2, Gdx.graphics.getWidth(), backGround.getHeight() * imageScalability);
+		batch.draw(backGround, 0, y2, SpaceGame.screen_width, backGround.getHeight() * imageScalability);
 	}
-	public void backGround_RESIZE (int width, int height){
-		imageScalability = width / backGround.getWidth();
-	}
+
 	public void set_Speeed(int star_SPEED){
 		this.star_SPEED = star_SPEED;
 	}

@@ -1,9 +1,9 @@
 package entityy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import me.kaptaan.monte_enterprise.SpaceGame;
 import toolss.CollisionDetection;
 
 public class Asteroid {
@@ -18,7 +18,7 @@ public class Asteroid {
 	
 	public Asteroid (float asteroidX){
 		this.asteroidX = asteroidX;
-		this.asteroidY = Gdx.graphics.getHeight();
+		this.asteroidY =SpaceGame.screen_height;
 		this.detect = new CollisionDetection(asteroidX,asteroidY, Width, HEIGHT);
 		if(texture == null){
 			texture = new Texture("asteroid.png");

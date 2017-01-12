@@ -32,7 +32,6 @@ public class MainGameScreen implements Screen{
 	public static final int Ship_WIDTH = Ship_Pixel_WIDTH *3;
 	public static final int Ship_HEIGHT = Ship_Pixel_HEIGHT *3;
 	public static final float Bullet_Wait_Timer = 0.2f;
-	
 	public static final float MIN_SPAWN_TIME = 0.1f;
 	public static final float MAX_SPAWN_TIME = 0.4f;
 	//Float party
@@ -59,17 +58,27 @@ public class MainGameScreen implements Screen{
 	Texture blank;
 	float health = 1; //1 = full health, 0 = Dead/No health
 	CollisionDetection playerDetect;
-
+	Texture controls;
+	boolean removeControls;
 
 	public MainGameScreen(SpaceGame spaceG){
 		this.spaceG = spaceG;
 		score = 0;
+		
 		y = 15;
-		x = SpaceGame.screen_width/2 - Ship_WIDTH/2;
+		x = SpaceGame.screen_width/2 - Ship_WIDTH;//Incase an error comes up, here, the ship_width was /2 but i have removed it. This is a reminder just in case
 		bullet = new ArrayList<bullets>();
 		asteroids = new ArrayList<Asteroid>();
 		booms = new ArrayList<Boom>();
 		dice = new Random();
+		
+		if(SpaceGame.mobile_ = true){
+			controls = new Texture("controls.png");//Saves memory and stuff in case it isnt on the computer
+		}
+		
+		
+		
+		
 		playerDetect = new CollisionDetection(0, 0, Ship_WIDTH, Ship_HEIGHT);
 		fontSCORE = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
 		Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
@@ -100,7 +109,8 @@ public class MainGameScreen implements Screen{
 		//Bullet code
 		
 		ArrayList<bullets> bullet_removal_service = new ArrayList<bullets>();
-		if(Gdx.input.isKeyPressed(Keys.SPACE) && bulletTimer >= Bullet_Wait_Timer){
+		if((isLeft() || isRight()) && bulletTimer >= Bullet_Wait_Timer){//Only doing this because of the mobile version, this sucks
+			removeControls = true;
 			if(roll != 2){
 				bullet.add(new bullets(x + 12));
 				bullet.add(new bullets(x + Ship_WIDTH - 14));
@@ -125,7 +135,7 @@ public class MainGameScreen implements Screen{
 		 Asteroid_Spawn_TIMER -= delta;
 		 if(Asteroid_Spawn_TIMER < 0 ){
 			 Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
-			 asteroids.add(new Asteroid(dice.nextInt(Gdx.graphics.getWidth() - Asteroid.Width)));
+			 asteroids.add(new Asteroid(dice.nextInt(SpaceGame.screen_width - Asteroid.Width)));
 			 }
 		 
 		 //Asteroid updater 
@@ -160,13 +170,13 @@ public class MainGameScreen implements Screen{
 			}*/
 			
 		//Roll Updater 
-		if(Gdx.input.isKeyPressed(Keys.LEFT)){
+		if(isLeft()){
 			x-=SPEED*Gdx.graphics.getDeltaTime();
 			if(x < 0){
 				x=0;
 			}
 			//Roll update if button is clicked for a short period of time/ just one press
-			if(Gdx.input.isKeyJustPressed(Keys.LEFT) && !Gdx.input.isKeyJustPressed(Keys.RIGHT) && roll > 0){
+			if(justLeft() && !justRight() && roll > 0){
 				ROLL_TIMER = 0;
 				roll--;
 			}
@@ -191,10 +201,10 @@ public class MainGameScreen implements Screen{
 		}
 		}
 			
-		if(Gdx.input.isKeyPressed(Keys.RIGHT)){
+		if(isRight()){
 			x+=SPEED*Gdx.graphics.getDeltaTime();
 			
-			if(Gdx.input.isKeyJustPressed(Keys.RIGHT) && !Gdx.input.isKeyJustPressed(Keys.LEFT) && roll > 0){
+			if(justRight() && !justLeft() && roll > 0){
 				ROLL_TIMER = 0;
 				roll++;
 				if(roll>4){
@@ -283,9 +293,21 @@ public class MainGameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		spaceG.batch.begin();  
 		//get hacked kiddo
+		if(SpaceGame.mobile_){
+			//Left side 
+			if(!removeControls){
+			spaceG.batch.setColor(Color.CYAN);
+			spaceG.batch.draw(controls, 0 , 0, SpaceGame.screen_width/2, SpaceGame.screen_height, 0, 0, SpaceGame.screen_width/2, SpaceGame.screen_height, false, false );
+			//Right side
+			spaceG.batch.setColor(Color.CHARTREUSE);
+			spaceG.batch.draw(controls, SpaceGame.screen_width/2 , 0, SpaceGame.screen_width/2, SpaceGame.screen_height, 0, 0, SpaceGame.screen_width/2, SpaceGame.screen_height, true, false );
+			
+			spaceG.batch.setColor(Color.WHITE);
+			}
+		}
 		spaceG.scroolBG.updateANDrender(Gdx.graphics.getDeltaTime(), spaceG.batch);
 		GlyphLayout  scoreLayout = new GlyphLayout(fontSCORE, "" + score); 
-		fontSCORE.draw(spaceG.batch, scoreLayout, (Gdx.graphics.getWidth()/2 - scoreLayout.width)+ 30,Gdx.graphics.getHeight() - scoreLayout.height );
+		fontSCORE.draw(spaceG.batch, scoreLayout, (SpaceGame.screen_width/2 - scoreLayout.width)+ 30,SpaceGame.screen_height - scoreLayout.height );
 		
 		for(bullets bullet: bullet ){
 			bullet.render(spaceG.batch);
@@ -306,7 +328,7 @@ public class MainGameScreen implements Screen{
 		}else if(health > 0.0f){
 			spaceG.batch.setColor(Color.RED);
 		}		
-		spaceG.batch.draw(blank, 0, 0,Gdx.graphics.getWidth()* health, 5);
+		spaceG.batch.draw(blank, 0, 0,SpaceGame.screen_width* health, 5);
 		spaceG.batch.setColor(Color.WHITE);
 		//spaceG.batch.draw(img, x, y);
 		spaceG.batch.draw((TextureRegion)rolls[roll].getKeyFrame(stateTime, true), x, y, Ship_WIDTH, Ship_HEIGHT);
@@ -316,6 +338,18 @@ public class MainGameScreen implements Screen{
 		
 	}  //i am everywhere
 
+	private boolean isRight(){
+		return Gdx.input.isKeyPressed(Keys.RIGHT) || (Gdx.input.isTouched() && spaceG.cam.getGameInput().x >= SpaceGame.screen_width/2);//Checks if the screen is touched and it is on the right side of the screen 
+	}
+	private boolean isLeft(){
+		return Gdx.input.isKeyPressed(Keys.LEFT)|| (Gdx.input.isTouched() && spaceG.cam.getGameInput().x < SpaceGame.screen_width/2);
+	}
+	private  boolean justRight(){
+		return Gdx.input.isKeyJustPressed(Keys.RIGHT)|| (Gdx.input.isTouched() && spaceG.cam.getGameInput().x >= SpaceGame.screen_width/2);
+	}
+	private boolean justLeft(){
+		return Gdx.input.isKeyJustPressed(Keys.LEFT)|| (Gdx.input.isTouched() && spaceG.cam.getGameInput().x < SpaceGame.screen_width/2);
+	}
 	@Override
 	public void resize(int width, int height) {
 		

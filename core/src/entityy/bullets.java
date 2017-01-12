@@ -1,9 +1,9 @@
 package entityy;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import me.kaptaan.monte_enterprise.SpaceGame;
 import toolss.CollisionDetection;
 
 public class bullets {
@@ -32,7 +32,7 @@ public class bullets {
 	
 	public void update(float deltaTime){
 		bulletY += BULLET_SPEED * deltaTime;
-		if(bulletY > Gdx.graphics.getHeight()){{
+		if(bulletY >SpaceGame.screen_height){{
 			remove_BULLET = true;
 		}
 			

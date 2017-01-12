@@ -53,7 +53,7 @@ public class MainMenuScreen implements Screen {
 		
 		float x = SpaceGame.screen_width/2 - Play_Y/2;
 		//Play Button 
-		if(Gdx.input.getX() < x + Play_Button_Width && Gdx.input.getX() > x && SpaceGame.screen_height - Gdx.input.getY() < Play_Y + Play_Button_Height && SpaceGame.screen_height - Gdx.input.getY()> Play_Y ){
+		if(spaceG.cam.getGameInput().x < x + Play_Button_Width && spaceG.cam.getGameInput().x > x && SpaceGame.screen_height - spaceG.cam.getGameInput().y < Play_Y + Play_Button_Height && SpaceGame.screen_height - spaceG.cam.getGameInput().y> Play_Y ){
 			spaceG.batch.draw(ActivePlayButton, x,Play_Y, Play_Button_Width, Play_Button_Height);
 			if(Gdx.input.justTouched()){
 				spaceG.setScreen(new MainGameScreen(spaceG));
@@ -63,7 +63,7 @@ public class MainMenuScreen implements Screen {
 			spaceG.batch.draw(InactivePlayButton, x,Play_Y, Play_Button_Width, Play_Button_Height);
 		}
 		//Exit Button
-		if(Gdx.input.getX() < x + Exit_Button_Width && Gdx.input.getX() > x && SpaceGame.screen_height - Gdx.input.getY() < Exit_Y + Exit_Button_Height && SpaceGame.screen_height - Gdx.input.getY()> Exit_Y ){
+		if(spaceG.cam.getGameInput().x < x + Exit_Button_Width && spaceG.cam.getGameInput().x > x && SpaceGame.screen_height - spaceG.cam.getGameInput().y < Exit_Y + Exit_Button_Height && SpaceGame.screen_height - spaceG.cam.getGameInput().y> Exit_Y ){
 			spaceG.batch.draw(ActiveExitButton, x,Exit_Y, Exit_Button_Width, Exit_Button_Height);
 			if(Gdx.input.isTouched()){
 				Gdx.app.exit();

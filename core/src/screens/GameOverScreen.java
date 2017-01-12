@@ -66,17 +66,18 @@ public class GameOverScreen implements Screen {
 		
 		game.batch.begin();
 		game.scroolBG.updateANDrender(delta, game.batch);
-		game.batch.draw(BannerGameOver, Gdx.graphics.getWidth()/2 - WIDTHbanner/2,Gdx.graphics.getHeight()- HEIGHTbanner - 20, WIDTHbanner, HEIGHTbanner );
+		game.batch.draw(BannerGameOver, SpaceGame.screen_width/2 - WIDTHbanner/2,SpaceGame.screen_height- HEIGHTbanner - 20, WIDTHbanner, HEIGHTbanner );
 		GlyphLayout layout_SCORE = new GlyphLayout(scoreFont, "Score:\n " + score, Color.CHARTREUSE, 0, Align.center, false);
 		GlyphLayout layout_highSCORE = new GlyphLayout(scoreFont, "High Score: \n " + score, Color.CHARTREUSE, 0, Align.left, false);
 		
 		GlyphLayout tryAgain = new GlyphLayout(scoreFont, "Try Again");
 		GlyphLayout MainMenu = new GlyphLayout(scoreFont, "Main Menu");
-		float tryAgainX = Gdx.graphics.getWidth()/2 - tryAgain.width/2;
-		float tryAgainY = Gdx.graphics.getHeight()/2 - tryAgain.height/2;
-		float MainMenuX = Gdx.graphics.getWidth()/2 - tryAgain.width/2;
-		float MainMenuY= Gdx.graphics.getHeight()/2 - tryAgain.height/2 - tryAgain.height - 15;
-		float touchX = Gdx.input.getX(),touchY =  Gdx.graphics.getHeight() - Gdx.input.getY();
+		float tryAgainX = SpaceGame.screen_width/2 - tryAgain.width/2;
+		float tryAgainY = SpaceGame.screen_height/2 - tryAgain.height/2;
+		float MainMenuX = SpaceGame.screen_width/2 - tryAgain.width/2;
+		float MainMenuY= SpaceGame.screen_height/2 - tryAgain.height/2 - tryAgain.height - 15;
+		
+		float touchX = game.cam.getGameInput().x,touchY =  SpaceGame.screen_height - game.cam.getGameInput().y;
 		if(Gdx.input.justTouched()){
 			
 			//Try again
@@ -96,8 +97,8 @@ public class GameOverScreen implements Screen {
 		}
 		scoreFont.draw(game.batch, tryAgain, tryAgainX, tryAgainY);
 		scoreFont.draw(game.batch, MainMenu, MainMenuX, MainMenuY);
-		scoreFont.draw(game.batch, layout_SCORE,  Gdx.graphics.getWidth()/2 - layout_SCORE.width/2,  Gdx.graphics.getHeight() - HEIGHTbanner - 15 * 4 );
-		scoreFont.draw(game.batch, layout_highSCORE,  Gdx.graphics.getWidth()/2 - layout_highSCORE.width/2,  Gdx.graphics.getHeight() - HEIGHTbanner - layout_SCORE.height -  15 * 10 );
+		scoreFont.draw(game.batch, layout_SCORE,  SpaceGame.screen_width/2 - layout_SCORE.width/2,  SpaceGame.screen_height - HEIGHTbanner - 15 * 4 );
+		scoreFont.draw(game.batch, layout_highSCORE,  SpaceGame.screen_width/2 - layout_highSCORE.width/2,  SpaceGame.screen_height - HEIGHTbanner - layout_SCORE.height -  15 * 10 );
 		game.batch.end();
 
 	}
