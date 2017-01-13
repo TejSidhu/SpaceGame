@@ -15,7 +15,7 @@ public class MainMenuScreen implements Screen {
 	Texture ActivePlayButton;
 	Texture InactivePlayButton;
 	Texture spaceBG;
-	
+	Texture logo;
 	SpaceGame spaceG;
 	
 	private static final int Exit_Button_Width = 250;
@@ -24,6 +24,9 @@ public class MainMenuScreen implements Screen {
 	private static final int Play_Button_Height = 120;
 	private static final int Play_Y = 230;
 	private static final int Exit_Y = 100;
+	private static final int LOGO_width = 400;
+	private static final int LOGO_HEIGHT = 250;
+	private static final int LOGOy = 450;
 	
 	public MainMenuScreen(SpaceGame spaceG){
 		this.spaceG = spaceG;
@@ -32,6 +35,7 @@ public class MainMenuScreen implements Screen {
 		InactivePlayButton = new Texture("play_button_inactive.png");
 		ActiveExitButton = new Texture("exit_button_active.png");
 		InactiveExitButton = new Texture("exit_button_inactive.png");
+		logo = new Texture("logo.png");
 		spaceG.scroolBG.set_SpeedFixed(true);
 		spaceG.scroolBG.set_Speeed(ScrollingBG.DEFAULT_SPEED);
 	}
@@ -50,7 +54,7 @@ public class MainMenuScreen implements Screen {
 		spaceG.batch.begin();
 		
 		spaceG.scroolBG.updateANDrender(Gdx.graphics.getDeltaTime(), spaceG.batch);
-		
+		spaceG.batch.draw(logo, SpaceGame.screen_width/2 - LOGO_width/2, LOGOy, LOGO_width, LOGO_HEIGHT);
 		float x = SpaceGame.screen_width/2 - Play_Y/2;
 		//Play Button 
 		if(spaceG.cam.getGameInput().x < x + Play_Button_Width && spaceG.cam.getGameInput().x > x && SpaceGame.screen_height - spaceG.cam.getGameInput().y < Play_Y + Play_Button_Height && SpaceGame.screen_height - spaceG.cam.getGameInput().y> Play_Y ){

@@ -72,12 +72,22 @@ public class GameOverScreen implements Screen {
 		
 		GlyphLayout tryAgain = new GlyphLayout(scoreFont, "Try Again");
 		GlyphLayout MainMenu = new GlyphLayout(scoreFont, "Main Menu");
+		
 		float tryAgainX = SpaceGame.screen_width/2 - tryAgain.width/2;
 		float tryAgainY = SpaceGame.screen_height/2 - tryAgain.height/2;
 		float MainMenuX = SpaceGame.screen_width/2 - tryAgain.width/2;
 		float MainMenuY= SpaceGame.screen_height/2 - tryAgain.height/2 - tryAgain.height - 15;
 		
 		float touchX = game.cam.getGameInput().x,touchY =  SpaceGame.screen_height - game.cam.getGameInput().y;
+		//Checks for hover over the text 
+		if(touchX >= tryAgainX && touchX <= tryAgainX + tryAgain.width && touchY >= tryAgainY - tryAgain.height&& touchY <= tryAgainY ){
+				tryAgain.setText(scoreFont, "Try Again", Color.FIREBRICK, 0, Align.left,false);		
+		}
+		if(touchX >= MainMenuX && touchX <= MainMenuX + MainMenu.width && touchY >= MainMenuY - MainMenu.height&& touchY <= MainMenuY ){
+			MainMenu.setText(scoreFont, "Main Menu", Color.CHARTREUSE, 0, Align.left,false);		
+	}
+	
+		
 		if(Gdx.input.justTouched()){
 			
 			//Try again
@@ -97,8 +107,8 @@ public class GameOverScreen implements Screen {
 		}
 		scoreFont.draw(game.batch, tryAgain, tryAgainX, tryAgainY);
 		scoreFont.draw(game.batch, MainMenu, MainMenuX, MainMenuY);
-		scoreFont.draw(game.batch, layout_SCORE,  SpaceGame.screen_width/2 - layout_SCORE.width/2,  SpaceGame.screen_height - HEIGHTbanner - 15 * 4 );
-		scoreFont.draw(game.batch, layout_highSCORE,  SpaceGame.screen_width/2 - layout_highSCORE.width/2,  SpaceGame.screen_height - HEIGHTbanner - layout_SCORE.height -  15 * 10 );
+		scoreFont.draw(game.batch, layout_SCORE,  SpaceGame.screen_width/2 - layout_SCORE.width/2,  SpaceGame.screen_height - HEIGHTbanner - 15 * 2 );
+		scoreFont.draw(game.batch, layout_highSCORE,  SpaceGame.screen_width/2 - layout_highSCORE.width/2,  SpaceGame.screen_height - HEIGHTbanner - layout_SCORE.height -  15 * 5 );
 		game.batch.end();
 
 	}

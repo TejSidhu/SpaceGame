@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Boom {
 	public static final float frameLength = 0.2f;
-	public static final int ofset = 40; //This will help in finding the center of the asteroid as it takes 16 from 2 sides to find the centre
+	public static final int ofset = 50; //This will help in finding the center of the asteroid as it takes 16 from 2 sides to find the centre
 	public static final int Boom_SIZE = 128;
 //	public static final int sixe = 32; //MEant to be size of image but too late for fixing the typo
 	

@@ -14,9 +14,9 @@ public class DesktopLauncher {
 		config.height = SpaceGame.screen_height;
 		config.resizable = true;
 		config.title = ("Space Destruction 0.0.1 alpha");
-		config.addIcon("icon_32.png", FileType.Internal);
-		config.addIcon("icon_16.png", FileType.Internal);
-		config.addIcon("icon_128.png", FileType.Internal);
+		//config.addIcon("icon_32.png", FileType.Internal);
+		//config.addIcon("icon_16.png", FileType.Internal);
+		//config.addIcon("icon_128.png", FileType.Internal);
 		new LwjglApplication(new SpaceGame(), config);
 	}
 }

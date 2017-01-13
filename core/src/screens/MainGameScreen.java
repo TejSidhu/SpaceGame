@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Align;
 
 import entityy.Asteroid;
 import entityy.Boom;
@@ -33,7 +34,7 @@ public class MainGameScreen implements Screen{
 	public static final int Ship_HEIGHT = Ship_Pixel_HEIGHT *3;
 	public static final float Bullet_Wait_Timer = 0.2f;
 	public static final float MIN_SPAWN_TIME = 0.1f;
-	public static final float MAX_SPAWN_TIME = 0.4f;
+	public static final float MAX_SPAWN_TIME = 0.3f;
 	//Float party
 	float x;
 	float y;
@@ -72,14 +73,12 @@ public class MainGameScreen implements Screen{
 		booms = new ArrayList<Boom>();
 		dice = new Random();
 		
-		if(SpaceGame.mobile_ = true){
+		if(SpaceGame.mobile_){
 			controls = new Texture("controls.png");//Saves memory and stuff in case it isnt on the computer
+		}else{
+		playerDetect = new CollisionDetection(0, 0, Ship_WIDTH, Ship_HEIGHT);
 		}
 		
-		
-		
-		
-		playerDetect = new CollisionDetection(0, 0, Ship_WIDTH, Ship_HEIGHT);
 		fontSCORE = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
 		Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
 		roll = 2;
@@ -293,18 +292,7 @@ public class MainGameScreen implements Screen{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		spaceG.batch.begin();  
 		//get hacked kiddo
-		if(SpaceGame.mobile_){
-			//Left side 
-			if(!removeControls){
-			spaceG.batch.setColor(Color.CYAN);
-			spaceG.batch.draw(controls, 0 , 0, SpaceGame.screen_width/2, SpaceGame.screen_height, 0, 0, SpaceGame.screen_width/2, SpaceGame.screen_height, false, false );
-			//Right side
-			spaceG.batch.setColor(Color.CHARTREUSE);
-			spaceG.batch.draw(controls, SpaceGame.screen_width/2 , 0, SpaceGame.screen_width/2, SpaceGame.screen_height, 0, 0, SpaceGame.screen_width/2, SpaceGame.screen_height, true, false );
-			
-			spaceG.batch.setColor(Color.WHITE);
-			}
-		}
+		
 		spaceG.scroolBG.updateANDrender(Gdx.graphics.getDeltaTime(), spaceG.batch);
 		GlyphLayout  scoreLayout = new GlyphLayout(fontSCORE, "" + score); 
 		fontSCORE.draw(spaceG.batch, scoreLayout, (SpaceGame.screen_width/2 - scoreLayout.width)+ 30,SpaceGame.screen_height - scoreLayout.height );
@@ -332,7 +320,23 @@ public class MainGameScreen implements Screen{
 		spaceG.batch.setColor(Color.WHITE);
 		//spaceG.batch.draw(img, x, y);
 		spaceG.batch.draw((TextureRegion)rolls[roll].getKeyFrame(stateTime, true), x, y, Ship_WIDTH, Ship_HEIGHT);
-		
+		if(SpaceGame.mobile_){
+			//Left side 
+			if(!removeControls){
+			spaceG.batch.setColor(Color.CYAN);
+			spaceG.batch.draw(controls, 0 , 0, SpaceGame.screen_width/2, SpaceGame.screen_height, 0, 0, SpaceGame.screen_width/2, SpaceGame.screen_height, false, false );
+			//Right side
+			spaceG.batch.setColor(Color.CHARTREUSE);
+			spaceG.batch.draw(controls, SpaceGame.screen_width/2 , 0, SpaceGame.screen_width/2, SpaceGame.screen_height, 0, 0, SpaceGame.screen_width/2, SpaceGame.screen_height, true, false );
+			
+			spaceG.batch.setColor(Color.WHITE);
+			}
+		}else{
+			if(!removeControls){
+			GlyphLayout instructionsLayout = new GlyphLayout(fontSCORE, "Press Left/Right Arrowkeys to Shoot!", Color.WHITE, SpaceGame.screen_width- 50, Align.center, true);
+			fontSCORE.draw(spaceG.batch, instructionsLayout, SpaceGame.screen_width / 2 - instructionsLayout.width / 2, 300);
+			}
+		}
 		
 		spaceG.batch.end();
 		

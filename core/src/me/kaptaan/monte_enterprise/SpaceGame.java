@@ -29,7 +29,7 @@ public class SpaceGame extends Game {
 		if(Gdx.app.getType() == ApplicationType.Android || Gdx.app.getType() == ApplicationType.iOS ){
 			mobile_ = true;
 		}
-		mobile_ = true;//Only for testing purposes, MAKE SURE TO DELETE THIS LATER
+		//mobile_ = true;//Only for testing purposes, MAKE SURE TO DELETE THIS LATER
 		this.scroolBG = new ScrollingBG();
 		this.setScreen(new MainMenuScreen(this));
 	}
