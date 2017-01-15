@@ -7,10 +7,11 @@ import me.kaptaan.monte_enterprise.SpaceGame;
 import toolss.CollisionDetection;
 
 public class Asteroid {
-	public static final int ASTEROID_SPEED = 300;
+	public static final int ASTEROID_SPEED = 200;
 	public static final int Width = 32;
 	public static final int HEIGHT= 32;
 	public static Texture texture;
+	public static Texture texture1;
 	
 	float asteroidX, asteroidY;
 	CollisionDetection detect;
@@ -22,6 +23,10 @@ public class Asteroid {
 		this.detect = new CollisionDetection(asteroidX,asteroidY, Width, HEIGHT);
 		if(texture == null){
 			texture = new Texture("asteroid.png");
+			
+		}
+		if(texture1 == null){
+			texture1 = new Texture("asteroid1.png");
 			
 		}
 	}
@@ -36,6 +41,11 @@ public class Asteroid {
 	public void render(SpriteBatch batch){
 		detect.move(asteroidX, asteroidY);
 		batch.draw(texture, asteroidX, asteroidY, Width, HEIGHT);
+
+	}
+	public void render1(SpriteBatch batch){
+		detect.move(asteroidX, asteroidY);
+		batch.draw(texture1, asteroidX, asteroidY, Width, HEIGHT);
 
 	}
 	public CollisionDetection getCollisionDetection(){

@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Align;
 import entityy.Asteroid;
 import entityy.Boom;
 import entityy.bullets;
+import me.kaptaan.monte_enterprise.BackgroundMusic;
 import me.kaptaan.monte_enterprise.SpaceGame;
 import toolss.CollisionDetection;
 
@@ -33,8 +34,12 @@ public class MainGameScreen implements Screen{
 	public static final int Ship_WIDTH = Ship_Pixel_WIDTH *3;
 	public static final int Ship_HEIGHT = Ship_Pixel_HEIGHT *3;
 	public static final float Bullet_Wait_Timer = 0.2f;
-	public static final float MIN_SPAWN_TIME = 0.1f;
-	public static final float MAX_SPAWN_TIME = 0.3f;
+	//Normal asteroids
+	public static final float MIN_SPAWN_TIME = 0.2f;
+	public static final float MAX_SPAWN_TIME = 0.5f;
+	//'super' asteroids
+	public static final float MIN_SPAWN_TIME1 = 5f;
+	public static final float MAX_SPAWN_TIME1 = 6.8f;
 	//Float party
 	float x;
 	float y;
@@ -45,8 +50,11 @@ public class MainGameScreen implements Screen{
 	float ROLL_TIMER;//Actual timer to keep track of the ROLL_SWITCH_TIMER
 	float positions []; 
 	float Asteroid_Spawn_TIMER;
+	//for the 'super' asteroids
+	float Asteroid_Spawn_TIMER1;
 	ArrayList<bullets> bullet;
 	ArrayList<Asteroid> asteroids;
+	ArrayList<Asteroid> asteroids1;
 	ArrayList<Boom> booms;
 	Random dice; 
 	BitmapFont fontSCORE; 
@@ -61,8 +69,9 @@ public class MainGameScreen implements Screen{
 	CollisionDetection playerDetect;
 	Texture controls;
 	boolean removeControls;
-
+	BackgroundMusic music;
 	public MainGameScreen(SpaceGame spaceG){
+		music = new BackgroundMusic();
 		this.spaceG = spaceG;
 		score = 0;
 		
@@ -70,6 +79,7 @@ public class MainGameScreen implements Screen{
 		x = SpaceGame.screen_width/2 - Ship_WIDTH;//Incase an error comes up, here, the ship_width was /2 but i have removed it. This is a reminder just in case
 		bullet = new ArrayList<bullets>();
 		asteroids = new ArrayList<Asteroid>();
+		asteroids1 = new ArrayList<Asteroid>();
 		booms = new ArrayList<Boom>();
 		dice = new Random();
 		
@@ -81,6 +91,7 @@ public class MainGameScreen implements Screen{
 		
 		fontSCORE = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
 		Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
+		Asteroid_Spawn_TIMER1 = dice.nextFloat() * (MAX_SPAWN_TIME1 - MIN_SPAWN_TIME1) + MIN_SPAWN_TIME1 ;
 		roll = 2;
 		rolls = new Animation[5];
 		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"),Ship_Pixel_WIDTH,Ship_Pixel_HEIGHT);
@@ -136,13 +147,25 @@ public class MainGameScreen implements Screen{
 			 Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
 			 asteroids.add(new Asteroid(dice.nextInt(SpaceGame.screen_width - Asteroid.Width)));
 			 }
-		 
+		 Asteroid_Spawn_TIMER1 -= delta;
+		 if(Asteroid_Spawn_TIMER1 < 0 ){
+			 Asteroid_Spawn_TIMER1 = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
+			 asteroids1.add(new Asteroid(dice.nextInt(SpaceGame.screen_width - Asteroid.Width)));
+			 }
 		 //Asteroid updater 
 		 ArrayList<Asteroid> asteroid_removal_service = new ArrayList<Asteroid>();
 		 for(Asteroid asteroid: asteroids){
 			 asteroid.update(delta);
 			 if(asteroid.remove_ASTEROID){
 				 asteroid_removal_service.add(asteroid);
+			 }
+			
+		 } 
+		 //ArrayList<Asteroid> asteroid_removal_service = new ArrayList<Asteroid>();
+		 for(Asteroid asteroid1: asteroids1){
+			 asteroid1.update(delta);
+			 if(asteroid1.remove_ASTEROID){
+				 asteroid_removal_service.add(asteroid1);
 			 }
 			
 		 } 
@@ -258,6 +281,16 @@ public class MainGameScreen implements Screen{
 				}
 			}
 		}
+		for(bullets bullet: bullet){
+			for(Asteroid asteroid1 : asteroids1){
+				if(bullet.getCollisionDetection().collisionWITH(asteroid1.getCollisionDetection())){//Checks for collision
+					asteroid_removal_service.add(asteroid1);
+					bullet_removal_service.add(bullet);
+					booms.add(new Boom(asteroid1.getX(), asteroid1.getY())) ;
+					score+= 200;
+				}
+			}
+		}
 		
 		
 		
@@ -280,12 +313,30 @@ public class MainGameScreen implements Screen{
 				}
 			}
 		}
+		for(Asteroid asteroid1 : asteroids1){
+			if(asteroid1.getCollisionDetection().collisionWITH(playerDetect)){
+				asteroid_removal_service.add(asteroid1);
+				health -= 0.5;
+				//If the player has no health, go to game over screen
+				if(health<=0){
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					this.dispose();
+					spaceG.setScreen(new GameOverScreen(spaceG, score));
+					return;
+				}
+			}
+		}
 		
 		
 		bullet.removeAll(bullet_removal_service);
 		
 		asteroids.removeAll(asteroid_removal_service);
-		
+		asteroids1.removeAll(asteroid_removal_service);
 		stateTime += delta;
 		
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -302,6 +353,9 @@ public class MainGameScreen implements Screen{
 		}
 		for(Asteroid asteroid: asteroids ){
 			asteroid.render(spaceG.batch);
+		}
+		for(Asteroid asteroid1: asteroids1 ){
+			asteroid1.render1(spaceG.batch);
 		}
 		for(Boom boom: booms){
 			boom.render(spaceG.batch);
