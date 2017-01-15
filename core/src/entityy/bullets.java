@@ -1,5 +1,6 @@
 package entityy;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -25,7 +26,7 @@ public class bullets {
 
 		this.detect = new CollisionDetection(bulletX,bulletY, Width, Height);
 		if(texture == null){
-			texture = new Texture("bullet.png");
+			texture = new Texture(Gdx.files.internal("assets/bullet.png"));
 			
 		}
 	}

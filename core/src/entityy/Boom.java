@@ -35,7 +35,7 @@ public class Boom {
 		 //stateTimer  = 0;
 		//anime1 = new Animation(frameLength,(new TextureRegion(new Texture("explosion1.png"))), (new TextureRegion(new Texture("explosion2.png"))), (new TextureRegion(new Texture("explosion3.png"))));
 		//System.out.println(stateTimer);
-		explosionsAtlas = new TextureAtlas("explosions.atlas");
+		explosionsAtlas = new TextureAtlas(Gdx.files.internal("assets/explosions.atlas"));
 		animation = new Animation<TextureRegion>(1/3f, explosionsAtlas.getRegions());
  //hello tej i am in the system
 		

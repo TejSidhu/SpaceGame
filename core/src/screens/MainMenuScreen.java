@@ -30,12 +30,12 @@ public class MainMenuScreen implements Screen {
 	
 	public MainMenuScreen(SpaceGame spaceG){
 		this.spaceG = spaceG;
-		spaceBG = new Texture("spaceBG.jpg");
-		ActivePlayButton = new Texture("play_button_active.png");
-		InactivePlayButton = new Texture("play_button_inactive.png");
-		ActiveExitButton = new Texture("exit_button_active.png");
-		InactiveExitButton = new Texture("exit_button_inactive.png");
-		logo = new Texture("logo.png");
+		spaceBG = new Texture(Gdx.files.internal("assets/spaceBG.jpg"));
+		ActivePlayButton = new Texture(Gdx.files.internal("assets/play_button_active.png"));
+		InactivePlayButton = new Texture(Gdx.files.internal("assets/play_button_inactive.png"));
+		ActiveExitButton = new Texture(Gdx.files.internal("assets/exit_button_active.png"));
+		InactiveExitButton = new Texture(Gdx.files.internal("assets/exit_button_inactive.png"));
+		logo = new Texture(Gdx.files.internal("assets/logo.png"));
 		spaceG.scroolBG.set_SpeedFixed(true);
 		spaceG.scroolBG.set_Speeed(ScrollingBG.DEFAULT_SPEED);
 	}

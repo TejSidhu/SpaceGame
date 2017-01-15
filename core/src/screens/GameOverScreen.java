@@ -39,8 +39,8 @@ public class GameOverScreen implements Screen {
 			prefs.flush();//Saves to the file
 		}
 		//Loads textures + font
-		BannerGameOver = new Texture("game_over.png");
-		scoreFont = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		BannerGameOver = new Texture(Gdx.files.internal("assets/game_over.png"));
+		scoreFont = new BitmapFont(Gdx.files.internal("assets/fonts/score.fnt"));
 		game.scroolBG.set_SpeedFixed(false);
 		game.scroolBG.set_Speeed(ScrollingBG.DEFAULT_SPEED);
 	}

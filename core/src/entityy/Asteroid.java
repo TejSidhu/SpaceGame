@@ -1,5 +1,6 @@
 package entityy;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -22,11 +23,11 @@ public class Asteroid {
 		this.asteroidY =SpaceGame.screen_height;
 		this.detect = new CollisionDetection(asteroidX,asteroidY, Width, HEIGHT);
 		if(texture == null){
-			texture = new Texture("asteroid.png");
+			texture = new Texture(Gdx.files.internal("assets/asteroid.png"));
 			
 		}
 		if(texture1 == null){
-			texture1 = new Texture("asteroid1.png");
+			texture1 = new Texture(Gdx.files.internal("assets/asteroid1.png"));
 			
 		}
 	}

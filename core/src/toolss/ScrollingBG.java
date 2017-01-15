@@ -19,7 +19,7 @@ boolean isSpeedFixed;
 
 
 	public ScrollingBG(){
-		backGround = new Texture("stars_background.png");
+		backGround = new Texture(Gdx.files.internal("assets/stars_background.png"));
 		y1 = 0;
 		y2 = backGround.getHeight();
 		speed = 0;

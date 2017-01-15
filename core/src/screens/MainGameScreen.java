@@ -74,7 +74,6 @@ public class MainGameScreen implements Screen{
 		music = new BackgroundMusic();
 		this.spaceG = spaceG;
 		score = 0;
-		
 		y = 15;
 		x = SpaceGame.screen_width/2 - Ship_WIDTH;//Incase an error comes up, here, the ship_width was /2 but i have removed it. This is a reminder just in case
 		bullet = new ArrayList<bullets>();
@@ -84,17 +83,17 @@ public class MainGameScreen implements Screen{
 		dice = new Random();
 		
 		if(SpaceGame.mobile_){
-			controls = new Texture("controls.png");//Saves memory and stuff in case it isnt on the computer
+			controls = new Texture(Gdx.files.internal("assets/controls.png"));//Saves memory and stuff in case it isnt on the computer
 		}else{
 		playerDetect = new CollisionDetection(0, 0, Ship_WIDTH, Ship_HEIGHT);
 		}
 		
-		fontSCORE = new BitmapFont(Gdx.files.internal("fonts/score.fnt"));
+		fontSCORE = new BitmapFont(Gdx.files.internal("assets/fonts/score.fnt"));
 		Asteroid_Spawn_TIMER = dice.nextFloat() * (MAX_SPAWN_TIME - MIN_SPAWN_TIME) + MIN_SPAWN_TIME ;
 		Asteroid_Spawn_TIMER1 = dice.nextFloat() * (MAX_SPAWN_TIME1 - MIN_SPAWN_TIME1) + MIN_SPAWN_TIME1 ;
 		roll = 2;
 		rolls = new Animation[5];
-		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture("ship.png"),Ship_Pixel_WIDTH,Ship_Pixel_HEIGHT);
+		TextureRegion[][] rollSpriteSheet = TextureRegion.split(new Texture(Gdx.files.internal("assets/ship.png")),Ship_Pixel_WIDTH,Ship_Pixel_HEIGHT);
 		ROLL_TIMER = 0;
 		bulletTimer = 0;
 		rolls[0] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[2]);//All left
@@ -102,7 +101,7 @@ public class MainGameScreen implements Screen{
 		rolls[2] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[0]);//No tilt
 		rolls[3] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[3]);
 		rolls[4] = new Animation<TextureRegion>(ANIMATION_SPEED, rollSpriteSheet[4]);//Right
-		blank = new Texture("blank.png");
+		blank = new Texture(Gdx.files.internal("assets/blank.png"));
 		spaceG.scroolBG.set_SpeedFixed(false);
 	}
 	
@@ -301,12 +300,6 @@ public class MainGameScreen implements Screen{
 				health -= 0.1;
 				//If the player has no health, go to game over screen
 				if(health<=0){
-					try {
-						Thread.sleep(300);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
 					this.dispose();
 					spaceG.setScreen(new GameOverScreen(spaceG, score));
 					return;
@@ -316,7 +309,7 @@ public class MainGameScreen implements Screen{
 		for(Asteroid asteroid1 : asteroids1){
 			if(asteroid1.getCollisionDetection().collisionWITH(playerDetect)){
 				asteroid_removal_service.add(asteroid1);
-				health -= 0.5;
+				health -= 0.3;
 				//If the player has no health, go to game over screen
 				if(health<=0){
 					try {
